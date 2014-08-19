@@ -4,14 +4,23 @@
 
 (enable-console-print!)
 
-(def app-state (atom {:text "Welcome to OM Mr!!"}))
+
+(def app-state (atom {:list ["Lion" "Zebra" "Buffalo" "Antelope"]}))
 
 (om/root
   (fn [app owner]
-    (reify om/IRender
-      (render [_]
-        (dom/h1 nil (:text app)))))
+    (om/component
+      (apply dom/ul #js {:className "animals"}
+        (map (fn [text] (dom/li nil text)) (:list app)))))
   app-state
-  {:target (. js/document (getElementById "app"))})
+  {:target (. js/document (getElementById "app0"))})
 
-(swap! app-state assoc :text "Do it live!")
+
+(om/root
+  (fn [app owner]
+    (om/component (dom/h2 nil (:text app))))
+  app-state
+  {:target (. js/document (getElementById "app1"))})
+
+
+(swap! app-state assoc :text "Multiple ROOTS!")
